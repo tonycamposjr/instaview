@@ -5,7 +5,7 @@
   "main": "bot.js",
   "type": "module",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node --env-file-if-exists=.env bot.js"
   },
   "engines": {
     "node": ">=18"

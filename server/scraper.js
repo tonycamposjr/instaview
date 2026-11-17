@@ -36,6 +36,23 @@ async function igFetch(url) {
 
   const res = await fetch(url, { headers, redirect: 'follow' });
 
+  // IG devolve HTML (página de login/404) quando a sessão não é aceita
+  const ct = res.headers.get('content-type') ?? '';
+  if (!ct.includes('json')) {
+    if (process.env.IG_SESSIONID) {
+      throw Object.assign(
+        new Error('Sessão do Instagram rejeitada — gere um novo sessionid'),
+        { status: 401 }
+      );
+    }
+    throw Object.assign(
+      new Error(
+        'Instagram exige sessão autenticada: defina IG_SESSIONID no .env (veja README)'
+      ),
+      { status: 401 }
+    );
+  }
+
   if (res.status === 404) {
     throw Object.assign(new Error('Perfil não encontrado'), { status: 404 });
   }
