@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InstaView — Visualizador Anônimo de Stories do Instagram</title>
+  <meta name="description" content="Veja stories, highlights, reels e fotos de perfis públicos do Instagram de forma anônima, sem login e sem anúncios.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="#">
+        <span class="brand-icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        Insta<span>View</span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-menu" id="navMenu">
+        <div class="dropdown">
+          <button class="nav-link drop-btn" aria-expanded="false">
+            Baixar
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="dropdown-panel">
+            <a href="#ferramentas">Story</a>
+            <a href="#ferramentas">Highlights</a>
+            <a href="#ferramentas">Foto</a>
+            <a href="#ferramentas">Vídeo</a>
+            <a href="#ferramentas">Reels</a>
+            <a href="#ferramentas">Foto de perfil</a>
+          </div>
+        </div>
+        <a class="nav-link" href="#como-funciona">Como funciona</a>
+        <a class="nav-link" href="#faq">FAQ</a>
+        <a class="nav-link" href="#contato">Contato</a>
+        <div class="dropdown">
+          <button class="nav-link drop-btn lang-btn" aria-expanded="false">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            PT
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="dropdown-panel dropdown-right">
+            <a href="#">Português</a>
+            <a href="#">English</a>
+            <a href="#">Español</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container">
+      <div class="badge">
+        <span class="dot"></span> 100% anônimo · Sem login · Sem anúncios
+      </div>
+      <h1>Visualizador anônimo de <span class="gradient-text">stories do Instagram</span></h1>
+      <p class="hero-sub">
+        Assista e salve stories, highlights, reels e fotos de perfis públicos
+        direto no navegador — sem entrar na sua conta e sem aparecer na lista de visualizações.
+      </p>
+
+      <form class="search-box" id="searchForm" autocomplete="off">
+        <div class="search-field">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="usernameInput" placeholder="Digite o @usuário ou link do perfil" spellcheck="false">
+          <button type="button" class="paste-btn" id="pasteBtn" title="Colar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+          </button>
+        </div>
+        <button type="submit" class="btn-primary" id="searchBtn">
+          <span class="btn-text">Ver stories</span>
+          <span class="spinner" hidden></span>
+        </button>
+      </form>
+      <p class="search-hint" id="searchHint">Funciona apenas com perfis <strong>públicos</strong>.</p>
+
+      <!-- Resultado (demo) -->
+      <div class="result-card" id="resultCard" hidden>
+        <div class="result-header">
+          <div class="result-avatar" id="resultAvatar"></div>
+          <div class="result-info">
+            <h3 id="resultName"></h3>
+            <p id="resultMeta"></p>
+          </div>
+          <span class="result-badge">Público</span>
+        </div>
+        <div class="result-tabs">
+          <button class="tab active" data-tab="stories">Stories</button>
+          <button class="tab" data-tab="highlights">Highlights</button>
+          <button class="tab" data-tab="reels">Reels</button>
+        </div>
+        <div class="result-grid" id="resultGrid"></div>
+        <p class="demo-note">
+          ⚠️ Modo demonstração: os itens abaixo são exemplos ilustrativos.
+          Para dados reais, conecte uma API de backend (ver <code>app.js</code>).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FERRAMENTAS / RECURSOS ===== -->
+  <section class="section" id="ferramentas">
+    <div class="container">
+      <h2 class="section-title">O que você pode <span class="gradient-text">explorar</span></h2>
+      <p class="section-sub">Tudo que o perfil público disponibiliza, em um só lugar.</p>
+      <div class="tools-grid">
+        <a href="#" class="tool-card" data-tool="stories">
+          <div class="tool-icon stories">📺</div>
+          <h3>Stories</h3>
+          <p>Posts de 24h que ainda estão no ar.</p>
+        </a>
+        <a href="#" class="tool-card" data-tool="highlights">
+          <div class="tool-icon highlights">⭐</div>
+          <h3>Highlights</h3>
+          <p>Stories arquivados fixados no perfil.</p>
+        </a>
+        <a href="#" class="tool-card" data-tool="reels">
+          <div class="tool-icon reels">🎬</div>
+          <h3>Reels</h3>
+          <p>Vídeos curtos publicados no perfil.</p>
+        </a>
+        <a href="#" class="tool-card" data-tool="photos">
+          <div class="tool-icon photos">🖼️</div>
+          <h3>Fotos</h3>
+          <p>Publicações de imagem em tamanho real.</p>
+        </a>
+        <a href="#" class="tool-card" data-tool="videos">
+          <div class="tool-icon videos">📹</div>
+          <h3>Vídeos</h3>
+          <p>Vídeos do feed com um clique para baixar.</p>
+        </a>
+        <a href="#" class="tool-card" data-tool="avatar">
+          <div class="tool-icon avatar">👤</div>
+          <h3>Foto de perfil</h3>
+          <p>Avatar em alta resolução.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== POR QUE USAR ===== -->
+  <section class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Por que usar o <span class="gradient-text">InstaView?</span></h2>
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/></svg>
+          </div>
+          <h3>100% anônimo</h3>
+          <p>Seu nome nunca aparece na lista de visualizações de quem postou.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+          </div>
+          <h3>Sem login</h3>
+          <p>Nada de senha, e-mail ou conta conectada. Só o navegador.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Só conteúdo público</h3>
+          <p>Perfis privados permanecem privados. Não burlamos nenhuma restrição.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <h3>Qualquer dispositivo</h3>
+          <p>Celular, tablet ou computador — sem instalar app ou extensão.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMO FUNCIONA ===== -->
+  <section class="section" id="como-funciona">
+    <div class="container">
+      <h2 class="section-title">Como funciona em <span class="gradient-text">3 passos</span></h2>
+      <div class="steps-grid">
+        <div class="step">
+          <span class="step-num">1</span>
+          <h3>Digite o @usuário</h3>
+          <p>Cole o nome de usuário (com ou sem @) ou o link do perfil público na barra de busca.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <h3>Navegue pelo conteúdo</h3>
+          <p>Explore stories ativos, highlights, reels e fotos direto no navegador.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <h3>Baixe o que quiser</h3>
+          <p>Salve fotos e vídeos no seu dispositivo com um clique, na melhor qualidade disponível.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="section section-alt" id="faq">
+    <div class="container narrow">
+      <h2 class="section-title">Perguntas <span class="gradient-text">frequentes</span></h2>
+      <div class="faq-list">
+        <details class="faq-item" open>
+          <summary>Preciso de uma conta para visualizar?</summary>
+          <div class="faq-answer">Não. Nenhum login ou conexão com o Instagram é necessário — basta o nome do perfil público.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Dá para ver perfis privados?</summary>
+          <div class="faq-answer">Não. Respeitamos as configurações de privacidade: contas privadas e conteúdo restrito nunca ficam acessíveis.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Por que um story específico não aparece?</summary>
+          <div class="faq-answer">Stories desaparecem automaticamente após 24 horas ou quando o autor exclui. Se sumiu do Instagram, não estará disponível aqui.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Posso baixar fotos e vídeos?</summary>
+          <div class="faq-answer">Sim. Todo arquivo público listado pode ser salvo no seu dispositivo em qualidade original.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Uso gratuito?</summary>
+          <div class="faq-answer">Sim, e sem anúncios: nenhuma cobrança, pop-up ou redirecionamento.</div>
+        </details>
+        <details class="faq-item">
+          <summary>A pessoa descobre que eu vi?</summary>
+          <div class="faq-answer">Não. A visualização não é registrada na lista de espectadores do story.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" id="contato">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="#">
+            <span class="brand-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            </span>
+            Insta<span>View</span>
+          </a>
+          <p>Visualizador anônimo de conteúdo público do Instagram. Simples, rápido e sem anúncios.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Ferramentas</h4>
+          <a href="#ferramentas">Stories</a>
+          <a href="#ferramentas">Highlights</a>
+          <a href="#ferramentas">Reels</a>
+          <a href="#ferramentas">Foto de perfil</a>
+        </div>
+        <div class="footer-col">
+          <h4>Institucional</h4>
+          <a href="#">Sobre nós</a>
+          <a href="#">Política de privacidade</a>
+          <a href="#">Termos de uso</a>
+          <a href="#">Reportar problema</a>
+        </div>
+        <div class="footer-col">
+          <h4>Suporte</h4>
+          <a href="#faq">FAQ</a>
+          <a href="#como-funciona">Como funciona</a>
+          <a href="mailto:contato@exemplo.com">Contato</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="disclaimer">
+          Aviso: o InstaView não é afiliado, associado ou endossado pelo Instagram™.
+          Não hospedamos nenhum conteúdo — apenas exibimos material público de terceiros.
+        </p>
+        <p>© 2026 InstaView. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

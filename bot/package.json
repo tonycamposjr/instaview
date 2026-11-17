@@ -1,0 +1,13 @@
+{
+  "name": "instaview-bot",
+  "version": "1.0.0",
+  "description": "Bot do Telegram do InstaView — busca perfis públicos e divulga no canal",
+  "main": "bot.js",
+  "type": "module",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
